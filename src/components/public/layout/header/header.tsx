@@ -1,28 +1,53 @@
 'use client';
 import { CloseIcon, MenuIcon } from '@/icons/icons';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import DesktopNav from './desktop-nav';
 import MainMobileNav from './main-mobile-nav';
 import ThemeToggle from './theme-toggle';
+import UserProfile from './user-profile';
+
+const mockUser = {
+  name: 'John Doe',
+  image: '',
+};
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const isLoggedIn = true;
 
   return (
     <header className="bg-white dark:bg-dark-primary border-b dark:border-gray-800 border-gray-100 sticky top-0 z-50 py-2 lg:py-4">
       <div className="px-4 sm:px-6 lg:px-7">
         <div className="grid grid-cols-2 items-center lg:grid-cols-[1fr_auto_1fr]">
           <div className="flex items-center">
-
+            {/* Place your logo here */}
           </div>
 
           <DesktopNav />
 
           <div className="flex items-center gap-4 justify-self-end">
             <ThemeToggle />
+
+            {isLoggedIn ? (
+              <UserProfile name={mockUser.name} image={mockUser.image} />
+            ) : (
+              <>
+                <Link
+                  href="/signin"
+                  className="text-sm hidden lg:block font-medium text-gray-700 dark:text-gray-400 hover:text-primary-500"
+                >
+                  Sign In
+                </Link>
+
+                <Link
+                  href="/signup"
+                  className="lg:inline-flex items-center px-5 py-3 gradient-btn hidden text-sm text-white rounded-full button-bg h-11"
+                >
+                  Get Started Free
+                </Link>
+              </>
+            )}
 
             <button
               onClick={(e) => {
@@ -34,25 +59,11 @@ export default function Header() {
             >
               {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
-
-            <Link
-              href="/signin"
-              className="text-sm hidden lg:block font-medium text-gray-700 dark:text-gray-400 hover:text-primary-500"
-            >
-              Sign In
-            </Link>
-
-            <Link
-              href="/signup"
-              className="lg:inline-flex items-center px-5 py-3 gradient-btn hidden text-sm text-white rounded-full button-bg h-11"
-            >
-              Get Started Free
-            </Link>
           </div>
         </div>
       </div>
 
-      <MainMobileNav isOpen={mobileMenuOpen} />
+      <MainMobileNav isOpen={mobileMenuOpen} isLoggedIn={isLoggedIn} />
     </header>
   );
 }
