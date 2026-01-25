@@ -1,3 +1,5 @@
+'use client';
+
 import { getCurrentYear } from "@/lib/utils";
 import Link from "next/link";
 import * as React from "react";
@@ -38,8 +40,9 @@ export default function Footer() {
   const glowFilterId = React.useId();
 
   return (
-    <footer className="relative overflow-hidden bg-gray-900 text-gray-400">
+    <footer className="relative overflow-hidden bg-gray-50 dark:bg-dark-primary text-gray-700 dark:text-gray-400">
 
+      {/* Glow background */}
       <span
         className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2"
         aria-hidden
@@ -73,8 +76,9 @@ export default function Footer() {
         <div className="container mx-auto px-5 sm:px-7">
           <div className="grid gap-x-6 gap-y-10 lg:grid-cols-12">
 
+            {/* Brand + Social */}
             <div className="lg:col-span-3 xl:col-span-4">
-              <p className="mb-9 text-sm">
+              <p className="mb-9 text-sm text-gray-600 dark:text-gray-400">
                 An AI platform built with Next.js, Tailwind CSS, and OpenAI
                 integrations.
               </p>
@@ -86,16 +90,16 @@ export default function Footer() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-10 items-center justify-center transition hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full transition hover:text-white hover:bg-gray-200 dark:hover:bg-white/10"
                     aria-label={`Social link ${i + 1}`}
                   >
-                    {/* icon */}
+                    {/* icon placeholder */}
                   </a>
                 ))}
               </nav>
             </div>
 
-            {/* Links */}
+            {/* Footer Links */}
             <nav
               className="lg:col-span-6 xl:col-span-5"
               aria-label="Footer navigation"
@@ -103,7 +107,7 @@ export default function Footer() {
               <div className="grid gap-7 sm:grid-cols-3">
                 {footerLinks.map((group) => (
                   <div key={group.title}>
-                    <span className="mb-6 block text-sm font-medium">
+                    <span className="mb-6 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       {group.title}
                     </span>
                     <ul className="space-y-3">
@@ -111,7 +115,7 @@ export default function Footer() {
                         <li key={link.label}>
                           <Link
                             href={link.href}
-                            className="text-sm transition hover:text-white"
+                            className="text-sm transition hover:text-primary-500 dark:hover:text-primary-400"
                           >
                             {link.label}
                           </Link>
@@ -123,11 +127,12 @@ export default function Footer() {
               </div>
             </nav>
 
+            {/* Newsletter */}
             <div className="lg:col-span-3">
-              <span className="mb-6 block text-sm font-medium">
+              <span className="mb-6 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Stay In Touch
               </span>
-              <p className="mb-5 text-sm">
+              <p className="mb-5 text-sm text-gray-600 dark:text-gray-400">
                 Subscribe now for exclusive insights and offers.
               </p>
 
@@ -143,7 +148,7 @@ export default function Footer() {
                   type="email"
                   placeholder="Enter your email"
                   required
-                  className="h-12 rounded-full border border-gray-700 bg-transparent px-4 text-center text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="h-12 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-dark-secondary px-4 text-center text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <button
                   type="submit"
@@ -157,9 +162,10 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-gray-800">
+      {/* Bottom bar */}
+      <div className="border-t border-gray-200 dark:border-gray-800">
         <div className="container mx-auto px-5 sm:px-7">
-          <p className="py-5 text-center text-sm text-gray-500">
+          <p className="py-5 text-center text-sm text-gray-500 dark:text-gray-400">
             © {getCurrentYear()} Md28 — All Rights Reserved.
           </p>
         </div>
