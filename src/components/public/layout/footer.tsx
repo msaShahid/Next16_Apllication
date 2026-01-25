@@ -1,12 +1,49 @@
 import { getCurrentYear } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
+import * as React from "react";
+
+const footerLinks = [
+  {
+    title: "Services",
+    links: [
+      { label: "Status", href: "/" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "FAQ", href: "/pricing#faq" },
+      { label: "Help Docs", href: "/contact" },
+      { label: "Privacy Policy", href: "/privacy" },
+    ],
+  },
+  {
+    title: "Features",
+    links: [
+      { label: "HTML File Upload", href: "/" },
+      { label: "HTML Website Hosting", href: "/" },
+      { label: "Free Image Hosting", href: "/" },
+      { label: "Upload PDF Online", href: "/" },
+      { label: "Free Zip Hosting", href: "/" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { label: "Login", href: "/signin" },
+      { label: "Sign Up", href: "/signup" },
+      { label: "Reset Password", href: "/reset-password" },
+      { label: "Support", href: "/contact" },
+    ],
+  },
+];
 
 export default function Footer() {
+  const glowFilterId = React.useId();
+
   return (
-    <footer className="relative overflow-hidden bg-gray-900">
-      {/* Glow background */}
-      <span className="absolute top-0 left-1/2 -translate-x-1/2">
+    <footer className="relative overflow-hidden bg-gray-900 text-gray-400">
+
+      <span
+        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2"
+        aria-hidden
+      >
         <svg
           width="1260"
           height="457"
@@ -14,12 +51,12 @@ export default function Footer() {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g filter="url(#filter0_f)">
+          <g filter={`url(#${glowFilterId})`}>
             <circle cx="630" cy="-173.299" r="230" fill="#10b981" />
           </g>
           <defs>
             <filter
-              id="filter0_f"
+              id={glowFilterId}
               x="0"
               y="-803.299"
               width="1260"
@@ -34,128 +71,97 @@ export default function Footer() {
 
       <div className="relative z-10 py-16 xl:py-24">
         <div className="container mx-auto px-5 sm:px-7">
-          <div className="grid gap-x-6 gap-y-8 lg:grid-cols-12">
-            {/* Brand */}
-            <div className="lg:col-span-3 xl:col-span-4">
+          <div className="grid gap-x-6 gap-y-10 lg:grid-cols-12">
 
-              <p className="mb-9 text-sm text-gray-400">
-                A self-hosted AI starter kit built with Next.js, Tailwind CSS,
-                and OpenAI integrations. Perfect for developers and startups
-                to quickly build, deploy, and scale AI-powered SaaS products.
+            <div className="lg:col-span-3 xl:col-span-4">
+              <p className="mb-9 text-sm">
+                An AI platform built with Next.js, Tailwind CSS, and OpenAI
+                integrations.
               </p>
 
-              {/* Socials */}
-              <div className="flex gap-1">
-                {[
-                  { href: "#" },
-                  { href: "#" },
-                  { href: "#" },
-                  { href: "#" },
-                ].map((item, i) => (
+              <nav aria-label="Social links" className="flex gap-2">
+                {["#", "#", "#", "#"].map((href, i) => (
                   <a
                     key={i}
-                    href={item.href}
+                    href={href}
                     target="_blank"
-                    className="size-10 text-gray-400 transition hover:text-white/80"
+                    rel="noopener noreferrer"
+                    className="flex size-10 items-center justify-center transition hover:text-white"
+                    aria-label={`Social link ${i + 1}`}
                   >
-                    {/* icon stays unchanged */}
+                    {/* icon */}
                   </a>
                 ))}
-              </div>
+              </nav>
             </div>
 
             {/* Links */}
-            <div className="lg:col-span-6 xl:col-span-5">
+            <nav
+              className="lg:col-span-6 xl:col-span-5"
+              aria-label="Footer navigation"
+            >
               <div className="grid gap-7 sm:grid-cols-3">
-                {[
-                  {
-                    title: "Services",
-                    links: [
-                      ["Status", "/"],
-                      ["Pricing", "/pricing"],
-                      ["FAQ", "/pricing#faq"],
-                      ["Help Docs", "/contact"],
-                      ["Privacy Policy", "/privacy"],
-                    ],
-                  },
-                  {
-                    title: "Features",
-                    links: [
-                      ["HTML File Upload", "/"],
-                      ["HTML Website Hosting", "/"],
-                      ["Free Image Hosting", "/"],
-                      ["Upload PDF Online", "/"],
-                      ["Free Zip Hosting", "/"],
-                    ],
-                  },
-                  {
-                    title: "Account",
-                    links: [
-                      ["Login", "/signin"],
-                      ["Sign Up", "/signup"],
-                      ["Reset Password", "/reset-password"],
-                      ["Support", "/contact"],
-                    ],
-                  },
-                ].map((group) => (
+                {footerLinks.map((group) => (
                   <div key={group.title}>
-                    <span className="mb-6 block text-sm text-gray-400">
+                    <span className="mb-6 block text-sm font-medium">
                       {group.title}
                     </span>
-                    <nav className="flex flex-col space-y-3">
-                      {group.links.map(([label, href]) => (
-                        <Link
-                          key={label}
-                          href={href}
-                          className="text-sm text-gray-400 transition hover:text-white"
-                        >
-                          {label}
-                        </Link>
+                    <ul className="space-y-3">
+                      {group.links.map((link) => (
+                        <li key={link.label}>
+                          <Link
+                            href={link.href}
+                            className="text-sm transition hover:text-white"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
                       ))}
-                    </nav>
+                    </ul>
                   </div>
                 ))}
               </div>
-            </div>
+            </nav>
 
-            {/* Newsletter */}
             <div className="lg:col-span-3">
-              <span className="mb-6 block text-sm text-gray-400">
+              <span className="mb-6 block text-sm font-medium">
                 Stay In Touch
               </span>
-              <p className="mb-5 text-sm text-gray-400">
-                Subscribe now for exclusive insights and offers!
+              <p className="mb-5 text-sm">
+                Subscribe now for exclusive insights and offers.
               </p>
 
-              <form>
-                <div className="flex w-full max-w-64 flex-col gap-2">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    required
-                    className="h-12 w-full rounded-full border border-gray-700 bg-transparent p-4 text-center text-sm text-white placeholder:text-gray-400 focus:outline-none"
-                  />
-                  <button
-                    type="submit"
-                    className="rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white transition hover:bg-primary-600"
-                  >
-                    Subscribe Now
-                  </button>
-                </div>
+              <form
+                aria-label="Newsletter subscription"
+                className="flex w-full max-w-64 flex-col gap-2"
+              >
+                <label htmlFor="newsletter-email" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  className="h-12 rounded-full border border-gray-700 bg-transparent px-4 text-center text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <button
+                  type="submit"
+                  className="rounded-full bg-primary-500 px-6 py-3 text-sm font-medium text-white transition hover:bg-primary-600"
+                >
+                  Subscribe Now
+                </button>
               </form>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-5 sm:px-7">
-          <div className="py-5 text-center">
-            <p className="text-sm text-gray-500">
-              &copy; {getCurrentYear()} Md28 — All Rights Reserved.
-            </p>
-          </div>
+          <p className="py-5 text-center text-sm text-gray-500">
+            © {getCurrentYear()} Md28 — All Rights Reserved.
+          </p>
         </div>
       </div>
     </footer>
