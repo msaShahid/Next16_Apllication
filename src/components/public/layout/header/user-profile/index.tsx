@@ -3,11 +3,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import ProfileMenu, { ProfileMenuItem } from './profile-menu';
+import Link from 'next/link';
 
 interface UserProfileProps {
   name: string;
   image?: string;
-  menuItems?: ProfileMenuItem[]; 
+  menuItems?: ProfileMenuItem[];
   className?: string;
 }
 
@@ -20,7 +21,7 @@ export default function UserProfile({
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const profileImage = image || '/next.svg'; 
+  const profileImage = image || '/next.svg';
 
   const handleClose = useCallback((e: MouseEvent | KeyboardEvent) => {
     if (

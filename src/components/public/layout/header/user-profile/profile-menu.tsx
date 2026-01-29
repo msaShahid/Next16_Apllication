@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useLogout } from '@/hooks/useLogout'
 
 export interface ProfileMenuItem {
   label: string;
@@ -15,20 +16,15 @@ interface ProfileMenuProps {
 }
 
 export default function ProfileMenu({ menuItems }: ProfileMenuProps) {
+  const logout = useLogout()
 
   const defaultMenuItems: ProfileMenuItem[] = [
     { label: 'Profile', href: '/profile' },
     { label: 'Settings', href: '/profile/settings' },
-    {
-      label: 'Logout',
-      onClick: () => {
-        router.push('/signin'); 
-      },
-    },
+    { label: 'Logout', onClick: logout },
   ];
 
   const items = menuItems || defaultMenuItems;
-  const router = useRouter();
   return (
     <ul className="py-2">
       {items.map((item, idx) => (

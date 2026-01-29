@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const logos = [
   "br-1.svg",
@@ -15,8 +16,15 @@ const logos = [
 
 export default function HeroLogos() {
   const { theme } = useTheme(); 
+    const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+   if (!mounted) return null;
+
+     return (
     <div className="wrapper">
       <div className="max-w-[1016px] relative z-30 mx-auto pt-14 pb-16">
         <p className="text-center text-gray-500 dark:text-gray-400 text-lg font-medium">
@@ -31,10 +39,11 @@ export default function HeroLogos() {
               width={80}
               height={32}
               alt={`Brand ${idx + 1}`}
-              className={`
-                transition-opacity duration-200
-                ${theme === "dark" ? "opacity-50 hover:opacity-100" : "opacity-70 hover:opacity-100"}
-              `}
+              className={`transition-opacity duration-200 ${
+                theme === "dark"
+                  ? "opacity-50 hover:opacity-100"
+                  : "opacity-70 hover:opacity-100"
+              }`}
               style={{
                 filter: theme === "light" ? "brightness(0.6)" : "none",
               }}
@@ -45,3 +54,5 @@ export default function HeroLogos() {
     </div>
   );
 }
+
+
