@@ -3,8 +3,24 @@
 import Link from 'next/link';
 import { SignInWithGithub, SignInWithGoogle } from '../_components/social-auth';
 import SignInForm from './signin-form';
+import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/stores/auth.store';
+import { useEffect } from 'react';
 
 export default function SignInPage() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading, user } = useAuthStore();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      router.replace(user.role === 'ADMIN' ? '/admin' : '/user')
+    }
+  }, [isLoading, isAuthenticated, user, router])
+
+  // prevent flicker
+  if (isLoading) return null
+
+
   return (
     <section className="py-28 relative overflow-hidden">
       <div className="wrapper">

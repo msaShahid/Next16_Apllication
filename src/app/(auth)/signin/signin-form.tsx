@@ -11,10 +11,17 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { api } from '@/lib/axios';
+import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/stores/auth.store'
 
 type Inputs = z.infer<typeof authValidation.login>;
 
 export default function SignInForm() {
+
+  const router = useRouter()
+  const { setUser } = useAuthStore()
+
   const form = useForm<Inputs>({
     resolver: zodResolver(authValidation.login),
     defaultValues: {
@@ -31,18 +38,18 @@ export default function SignInForm() {
     setIsShowPassword(!isShowPassword);
   };
 
-  async function onSubmit(data: Inputs) {
-    setIsLoading(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-
-    toast.success(
-      <pre>
-        <code>{JSON.stringify(data, null, 2)}</code>
-      </pre>
-    );
-
-    setIsLoading(false);
+  const onSubmit = async (data: Inputs) => {
+    try {
+      setIsLoading(true)
+      const res = await api.post('/auth/login', data)
+      setUser(res.data.user)
+      toast.success('Logged in successfully')
+      router.replace(res.data.user.role === 'ADMIN' ? '/admin' : '/user')
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Login failed')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
