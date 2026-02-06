@@ -10,20 +10,25 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { useAuth } from '@/hooks/useAuth';
 
 type Inputs = z.infer<typeof authValidation.register>;
 
 export default function SignupForm() {
+
+  const { register: registerUser } = useAuth();
+
   const form = useForm<Inputs>({
     resolver: zodResolver(authValidation.register),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
-  const [rememberMe, setRememberMe] = useState(false);
+
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,17 +37,21 @@ export default function SignupForm() {
   };
 
   async function onSubmit(data: Inputs) {
+
+    if (!acceptTerms) {
+      toast.error('Please accept the terms and conditions');
+      return;
+    }
+
     setIsLoading(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-
-    toast.success(
-      <pre>
-        <code>{JSON.stringify(data, null, 2)}</code>
-      </pre>
-    );
-
-    setIsLoading(false);
+    try {
+      await registerUser(data.name, data.email, data.password);
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -50,25 +59,12 @@ export default function SignupForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <Controller
           control={form.control}
-          name="firstName"
+          name="name"
           render={({ field, fieldState }) => (
             <InputGroup
               label="First name"
               placeholder="Your first name"
-              disabled={isLoading}
-              {...field}
-              error={fieldState.error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          control={form.control}
-          name="lastName"
-          render={({ field, fieldState }) => (
-            <InputGroup
-              label="Last name"
-              placeholder="Your last name"
+              groupClassName="col-span-full"
               disabled={isLoading}
               {...field}
               error={fieldState.error?.message}
@@ -121,20 +117,46 @@ export default function SignupForm() {
           )}
         </div>
 
+        <div className="col-span-full">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <div className="relative">
+            <Input
+              type={isShowPassword ? 'text' : 'password'}
+              placeholder="Confirm your password"
+              id="confirmPassword"
+              disabled={isLoading}
+              {...form.register('confirmPassword')}
+            />
+          </div>
+          {form.formState.errors.confirmPassword && (
+            <p className="text-red-500 text-sm mt-1.5">
+              {form.formState.errors.confirmPassword.message}
+            </p>
+          )}
+        </div>
+
         <Checkbox
-          label="Keep me logged in"
-          checked={rememberMe}
-          onChange={(e) => setRememberMe(e.target.checked)}
-          name="remember_me"
+          label={
+            <span className="text-sm text-gray-700 dark:text-gray-400">
+              I agree to the{' '}
+              <a href="/terms" className="text-primary-500 hover:underline">
+                Terms and Conditions
+              </a>
+            </span>
+          }
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+          name="accept_terms"
           className="col-span-full"
         />
 
+
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !acceptTerms}
           className="bg-primary-500 hover:bg-primary-600 transition py-3 px-6 w-full font-medium text-white text-sm rounded-full col-span-full disabled:opacity-75"
         >
-          {isLoading ? 'Signing up...' : 'Sign Up'}
+          {isLoading ? 'Creating account...' : 'Sign Up'}
         </button>
       </div>
     </form>
