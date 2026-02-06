@@ -10,17 +10,13 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { toast } from 'sonner';
-import { api } from '@/lib/axios';
-import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuth } from '@/hooks/useAuth';
 
 type Inputs = z.infer<typeof authValidation.login>;
 
 export default function SignInForm() {
 
-  const router = useRouter()
-  const { setUser } = useAuthStore()
+  const { login } = useAuth();
 
   const form = useForm<Inputs>({
     resolver: zodResolver(authValidation.login),
@@ -39,18 +35,15 @@ export default function SignInForm() {
   };
 
   const onSubmit = async (data: Inputs) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true)
-      const res = await api.post('/auth/login', data)
-      setUser(res.data.user)
-      toast.success('Logged in successfully')
-      router.replace(res.data.user.role === 'ADMIN' ? '/admin' : '/user')
+      await login(data.email, data.password);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Login failed')
+      console.error('Login error:', err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
