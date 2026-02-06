@@ -5,8 +5,7 @@ const requiredString = (message: string) => z.string().trim().min(1, message);
 const passwordSchema = z.string().min(8, "Password must be at least 8 characters long");
 
 export const authSchema = z.object({
-  firstName: requiredString("First name is required"),
-  lastName: requiredString("Last name is required"),
+  name: requiredString("Name is required"),
   email: z.string().email("Invalid email").trim(),
   password: passwordSchema,
 });
@@ -14,7 +13,14 @@ export const authSchema = z.object({
 export type AuthSchema = z.infer<typeof authSchema>;
 
 export const authValidation = {
-  register: authSchema,
+  register: authSchema
+    .extend({
+      confirmPassword: passwordSchema,
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      path: ["confirmPassword"],
+      message: "Passwords do not match",
+    }),
 
   login: authSchema.pick({
     email: true,
