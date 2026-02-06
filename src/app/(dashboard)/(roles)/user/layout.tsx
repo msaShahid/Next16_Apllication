@@ -1,16 +1,14 @@
-import Footer from '@/components/public/layout/footer';
-import Header from '@/components/public/layout/header/header';
+// src/app/dashboard/(roles)/user/layout.tsx
+import AuthGuard from '@/components/auth/AuthGuard'
 
-export default function SiteLayout({
+export default function UserLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <div className="dark:bg-[#101828] flex flex-col flex-1">
-      <Header />
-      <div className="isolate flex-1 flex flex-col">{children}</div>
-      <Footer />
-    </div>
-  );
+    <AuthGuard allowedRoles={['USER']}>
+      {children}
+    </AuthGuard>
+  )
 }
