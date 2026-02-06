@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { ThemeProvider } from 'next-themes';
 import { Onest } from 'next/font/google';
 import "./globals.css";
-import AuthBootstrap from "@/components/AuthBootstrap";
+import { Toaster } from "sonner";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 const onest = Onest({
   subsets: ['latin'],
@@ -21,15 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`bg-gray-100 dark:bg-dark-secondary min-h-screen flex flex-col ${onest.className}`}>
-        <AuthBootstrap>
-          <ThemeProvider disableTransitionOnChange>
 
-            <div className="isolate flex flex-col flex-1">
+        <ThemeProvider disableTransitionOnChange>
+          <div className="isolate flex flex-col flex-1">
+            <AuthProvider>
               {children}
-            </div>
+            </AuthProvider>
 
-          </ThemeProvider>
-        </AuthBootstrap>
+            <Toaster position="top-right" richColors />
+          </div>
+        </ThemeProvider>
+        
       </body>
     </html>
   );
