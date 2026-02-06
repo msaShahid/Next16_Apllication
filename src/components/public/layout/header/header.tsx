@@ -7,12 +7,12 @@ import DesktopNav from './desktop-nav'
 import MainMobileNav from './main-mobile-nav'
 import ThemeToggle from './theme-toggle'
 import UserProfile from './user-profile'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const { user, isAuthenticated } = useAuthStore()
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <header className="bg-white dark:bg-dark-primary border-b dark:border-gray-800 border-gray-100 sticky top-0 z-50 py-2 lg:py-4">
